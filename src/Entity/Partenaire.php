@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PartenaireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PartenaireRepository::class)]
@@ -22,8 +24,17 @@ class Partenaire
     #[ORM\Column]
     private ?float $don = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?contratpartenariat $partenaire = null;
+    #[ORM\OneToMany(mappedBy: 'partenaire', targetEntity: event::class)]
+    private Collection $event;
+
+    
+
+    public function __construct()
+    {
+        $this->event = new ArrayCollection();
+    }
+
+    
 
     public function getId(): ?int
     {
@@ -66,15 +77,37 @@ class Partenaire
         return $this;
     }
 
-    public function getPartenaire(): ?contratpartenariat
+    /**
+     * @return Collection<int, event>
+     */
+    public function getEvent(): Collection
     {
-        return $this->partenaire;
+        return $this->event;
     }
 
-    public function setPartenaire(?contratpartenariat $partenaire): static
+    public function addEvent(event $event): static
     {
-        $this->partenaire = $partenaire;
+        if (!$this->event->contains($event)) {
+            $this->event->add($event);
+            $event->setPartenaire($this);
+        }
 
         return $this;
     }
+
+    public function removeEvent(event $event): static
+    {
+        if ($this->event->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getPartenaire() === $this) {
+                $event->setPartenaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
+
+    
 }

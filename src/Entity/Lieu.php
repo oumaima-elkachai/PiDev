@@ -25,8 +25,16 @@ class Lieu
     #[ORM\Column]
     private ?float $prix = null;
 
-    #[ORM\OneToMany(mappedBy: 'lieu', targetEntity: categoryL::class)]
-    private Collection $Lieu;
+    #[ORM\ManyToOne(inversedBy: 'lieus')]
+    private ?CategoryL $categoryL = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Event $event = null;
+
+    
 
     public function __construct()
     {
@@ -74,33 +82,41 @@ class Lieu
         return $this;
     }
 
-    /**
-     * @return Collection<int, categoryL>
-     */
-    public function getLieu(): Collection
+    public function getCategoryL(): ?CategoryL
     {
-        return $this->Lieu;
+        return $this->categoryL;
     }
 
-    public function addLieu(categoryL $lieu): static
+    public function setCategoryL(?CategoryL $categoryL): static
     {
-        if (!$this->Lieu->contains($lieu)) {
-            $this->Lieu->add($lieu);
-            $lieu->setLieu($this);
-        }
+        $this->categoryL = $categoryL;
 
         return $this;
     }
 
-    public function removeLieu(categoryL $lieu): static
+    public function getImage(): ?string
     {
-        if ($this->Lieu->removeElement($lieu)) {
-            // set the owning side to null (unless already changed)
-            if ($lieu->getLieu() === $this) {
-                $lieu->setLieu(null);
-            }
-        }
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): static
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+   
 }

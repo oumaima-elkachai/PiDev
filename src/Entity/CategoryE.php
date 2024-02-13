@@ -16,8 +16,10 @@ class CategoryE
     #[ORM\Column(length: 255)]
     private ?string $Nom = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Event')]
+    #[ORM\ManyToOne(inversedBy: 'categoryE')]
     private ?Event $event = null;
+
+   
 
     public function getId(): ?int
     {
@@ -47,4 +49,6 @@ class CategoryE
 
         return $this;
     }
+
+ 
 }

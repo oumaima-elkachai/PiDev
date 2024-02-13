@@ -20,8 +20,10 @@ class Reclamation
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?user $reclamation = null;
+    #[ORM\ManyToOne(inversedBy: 'reclamation')]
+    private ?User $user = null;
+
+   
 
     public function getId(): ?int
     {
@@ -52,15 +54,17 @@ class Reclamation
         return $this;
     }
 
-    public function getReclamation(): ?user
+    public function getUser(): ?User
     {
-        return $this->reclamation;
+        return $this->user;
     }
 
-    public function setReclamation(?user $reclamation): static
+    public function setUser(?User $user): static
     {
-        $this->reclamation = $reclamation;
+        $this->user = $user;
 
         return $this;
     }
+
+    
 }

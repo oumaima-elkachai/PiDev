@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ContratpartenariatRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,6 +21,17 @@ class Contratpartenariat
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $datefin = null;
+
+    #[ORM\OneToMany(mappedBy: 'contrat', targetEntity: Partenaire::class)]
+    private Collection $partenaires;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Partenaire $partenaire = null;
+
+    public function __construct()
+    {
+        $this->partenaires = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -45,6 +58,48 @@ class Contratpartenariat
     public function setDatefin(\DateTimeInterface $datefin): static
     {
         $this->datefin = $datefin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Partenaire>
+     */
+    public function getPartenaires(): Collection
+    {
+        return $this->partenaires;
+    }
+
+    public function addPartenaire(Partenaire $partenaire): static
+    {
+        if (!$this->partenaires->contains($partenaire)) {
+            $this->partenaires->add($partenaire);
+            $partenaire->setContrat($this);
+        }
+
+        return $this;
+    }
+
+    public function removePartenaire(Partenaire $partenaire): static
+    {
+        if ($this->partenaires->removeElement($partenaire)) {
+            // set the owning side to null (unless already changed)
+            if ($partenaire->getContrat() === $this) {
+                $partenaire->setContrat(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): static
+    {
+        $this->partenaire = $partenaire;
 
         return $this;
     }

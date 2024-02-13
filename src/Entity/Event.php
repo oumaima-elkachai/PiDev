@@ -28,8 +28,19 @@ class Event
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $Date = null;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: categoryE::class)]
-    private Collection $Event;
+   
+
+    #[ORM\ManyToOne(inversedBy: 'user')]
+    private ?User $user = null;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Allocation::class)]
+    private Collection $allocations;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: CategoryE::class)]
+    private Collection $categoryE;
+
+    #[ORM\ManyToOne(inversedBy: 'event')]
+    private ?Partenaire $partenaire = null;
 
     
 
@@ -37,6 +48,8 @@ class Event
     {
         $this->events = new ArrayCollection();
         $this->Event = new ArrayCollection();
+        $this->allocations = new ArrayCollection();
+        $this->categoryE = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,18 +105,7 @@ class Event
         return $this;
     }
 
-    public function getCategory(): ?self
-    {
-        return $this->Category;
-    }
-
-    public function setCategory(?self $Category): static
-    {
-        $this->Category = $Category;
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection<int, self>
      */
@@ -140,5 +142,89 @@ class Event
     public function getEvent(): Collection
     {
         return $this->Event;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Allocation>
+     */
+    public function getAllocations(): Collection
+    {
+        return $this->allocations;
+    }
+
+    public function addAllocation(Allocation $allocation): static
+    {
+        if (!$this->allocations->contains($allocation)) {
+            $this->allocations->add($allocation);
+            $allocation->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAllocation(Allocation $allocation): static
+    {
+        if ($this->allocations->removeElement($allocation)) {
+            // set the owning side to null (unless already changed)
+            if ($allocation->getEvent() === $this) {
+                $allocation->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CategoryE>
+     */
+    public function getCategoryE(): Collection
+    {
+        return $this->categoryE;
+    }
+
+    public function addCategoryE(CategoryE $categoryE): static
+    {
+        if (!$this->categoryE->contains($categoryE)) {
+            $this->categoryE->add($categoryE);
+            $categoryE->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategoryE(CategoryE $categoryE): static
+    {
+        if ($this->categoryE->removeElement($categoryE)) {
+            // set the owning side to null (unless already changed)
+            if ($categoryE->getEvent() === $this) {
+                $categoryE->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): static
+    {
+        $this->partenaire = $partenaire;
+
+        return $this;
     }
 }

@@ -28,9 +28,16 @@ class Allocation
     #[ORM\Column]
     private ?int $quantity = null;
 
-    #[ORM\OneToMany(mappedBy: 'allocation', targetEntity: categoryA::class)]
-    private Collection $Allocation;
+    #[ORM\ManyToOne(inversedBy: 'allocations')]
+    private ?CategoryA $categoryA = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
+
+    #[ORM\ManyToOne(inversedBy: 'allocations')]
+    private ?Event $event = null;
+
+    
     public function __construct()
     {
         $this->Allocation = new ArrayCollection();
@@ -115,6 +122,42 @@ class Allocation
                 $allocation->setAllocation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategoryA(): ?CategoryA
+    {
+        return $this->categoryA;
+    }
+
+    public function setCategoryA(?CategoryA $categoryA): static
+    {
+        $this->categoryA = $categoryA;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): static
+    {
+        $this->event = $event;
 
         return $this;
     }
