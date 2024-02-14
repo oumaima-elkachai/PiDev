@@ -42,6 +42,12 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'event')]
     private ?Partenaire $partenaire = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $Category = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $Description = null;
+
     
 
     public function __construct()
@@ -224,6 +230,30 @@ class Event
     public function setPartenaire(?Partenaire $partenaire): static
     {
         $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->Category;
+    }
+
+    public function setCategory(string $Category): static
+    {
+        $this->Category = $Category;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(string $Description): static
+    {
+        $this->Description = $Description;
 
         return $this;
     }
