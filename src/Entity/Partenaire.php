@@ -27,6 +27,9 @@ class Partenaire
     #[ORM\OneToMany(mappedBy: 'partenaire', targetEntity: event::class)]
     private Collection $event;
 
+    #[ORM\ManyToOne(inversedBy: 'partenaires')]
+    private ?Contratpartenariat $contrat = null;
+
     
 
     public function __construct()
@@ -103,6 +106,18 @@ class Partenaire
                 $event->setPartenaire(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getContrat(): ?Contratpartenariat
+    {
+        return $this->contrat;
+    }
+
+    public function setContrat(?Contratpartenariat $contrat): static
+    {
+        $this->contrat = $contrat;
 
         return $this;
     }

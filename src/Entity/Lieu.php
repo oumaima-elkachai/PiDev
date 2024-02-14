@@ -31,16 +31,6 @@ class Lieu
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Event $event = null;
-
-    
-
-    public function __construct()
-    {
-        $this->Lieu = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -105,18 +95,4 @@ class Lieu
 
         return $this;
     }
-
-    public function getEvent(): ?Event
-    {
-        return $this->event;
-    }
-
-    public function setEvent(?Event $event): static
-    {
-        $this->event = $event;
-
-        return $this;
-    }
-
-   
 }

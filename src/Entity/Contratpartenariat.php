@@ -22,16 +22,18 @@ class Contratpartenariat
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $datefin = null;
 
-    #[ORM\OneToMany(mappedBy: 'contrat', targetEntity: Partenaire::class)]
-    private Collection $partenaires;
-
+    
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Partenaire $partenaire = null;
+
+    #[ORM\OneToMany(mappedBy: 'contrat', targetEntity: Partenaire::class)]
+    private Collection $partenaires;
 
     public function __construct()
     {
         $this->partenaires = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -62,6 +64,20 @@ class Contratpartenariat
         return $this;
     }
 
+   
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): static
+    {
+        $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Partenaire>
      */
@@ -88,18 +104,6 @@ class Contratpartenariat
                 $partenaire->setContrat(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getPartenaire(): ?Partenaire
-    {
-        return $this->partenaire;
-    }
-
-    public function setPartenaire(?Partenaire $partenaire): static
-    {
-        $this->partenaire = $partenaire;
 
         return $this;
     }

@@ -48,12 +48,13 @@ class Event
     #[ORM\Column(length: 255)]
     private ?string $Description = null;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Lieu $lieu = null;
+
     
 
     public function __construct()
     {
-        $this->events = new ArrayCollection();
-        $this->Event = new ArrayCollection();
         $this->allocations = new ArrayCollection();
         $this->categoryE = new ArrayCollection();
     }
@@ -111,44 +112,8 @@ class Event
         return $this;
     }
 
-   
-    /**
-     * @return Collection<int, self>
-     */
-    public function getEvents(): Collection
-    {
-        return $this->events;
-    }
 
-    public function addEvent(self $event): static
-    {
-        if (!$this->events->contains($event)) {
-            $this->events->add($event);
-            $event->setCategory($this);
-        }
 
-        return $this;
-    }
-
-    public function removeEvent(self $event): static
-    {
-        if ($this->events->removeElement($event)) {
-            // set the owning side to null (unless already changed)
-            if ($event->getCategory() === $this) {
-                $event->setCategory(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, categoryE>
-     */
-    public function getEvent(): Collection
-    {
-        return $this->Event;
-    }
 
     public function getUser(): ?User
     {
@@ -254,6 +219,18 @@ class Event
     public function setDescription(string $Description): static
     {
         $this->Description = $Description;
+
+        return $this;
+    }
+
+    public function getLieu(): ?Lieu
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(?Lieu $lieu): static
+    {
+        $this->lieu = $lieu;
 
         return $this;
     }

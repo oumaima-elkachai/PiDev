@@ -38,10 +38,7 @@ class Allocation
     private ?Event $event = null;
 
     
-    public function __construct()
-    {
-        $this->Allocation = new ArrayCollection();
-    }
+   
 
     public function getId(): ?int
     {
@@ -96,36 +93,7 @@ class Allocation
         return $this;
     }
 
-    /**
-     * @return Collection<int, categoryA>
-     */
-    public function getAllocation(): Collection
-    {
-        return $this->Allocation;
-    }
-
-    public function addAllocation(categoryA $allocation): static
-    {
-        if (!$this->Allocation->contains($allocation)) {
-            $this->Allocation->add($allocation);
-            $allocation->setAllocation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAllocation(categoryA $allocation): static
-    {
-        if ($this->Allocation->removeElement($allocation)) {
-            // set the owning side to null (unless already changed)
-            if ($allocation->getAllocation() === $this) {
-                $allocation->setAllocation(null);
-            }
-        }
-
-        return $this;
-    }
-
+   
     public function getCategoryA(): ?CategoryA
     {
         return $this->categoryA;
